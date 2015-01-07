@@ -42,7 +42,17 @@ var htmlSnapShot = function(req, res, next) {
                 res.send(404);
             }
             else {
-                fs.writeFileSync(p, data);
+                var fileData;
+                if (config.contentFilter) {
+                    try{
+                        fileData = config.contentFilter(data);
+                    }
+                    catch(ex) {
+                        fileData = data;
+                    }
+                }
+
+                fs.writeFileSync(p, fileData);
                 respond(res, p);
             }
         });
